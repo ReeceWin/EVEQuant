@@ -1,7 +1,6 @@
 import sqlite3
-  # Assuming we might put the DB path here later
+from config import DB_PATH
 
-DB_PATH = "eve.db"
 
 def get_item_name(item_id: int) -> str:
     """Fetches a single item name safely."""
@@ -33,3 +32,29 @@ def get_all_jumps() -> list[tuple[int, int]]:
         cursor = conn.cursor()
         cursor.execute("SELECT fromSolarSystemID, toSolarSystemID FROM mapSolarSystemJumps")
         return cursor.fetchall()
+
+def get_region_for_system(system_id: int) -> str:
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT regionID FROM mapSolarSystems WHERE solarSystemID = ?", (system_id,))
+        result = cursor.fetchone()
+        return result[0] if result else f"Unknown solarSystemId:({system_id})"
+
+def get_regions_for_system(system_ids: list[int]) -> set[int]:
+    if not system_ids:
+        return set()
+
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        placeholders = ",".join(["?"] * len(system_ids))
+        query = f"SELECT regionID FROM mapSolarSystems WHERE solarSystemID IN ({placeholders})"
+
+        cursor.execute(query, system_ids)
+        result = cursor.fetchall()
+        regions = set()
+        for row in result:
+            regions.add(row[0])
+    
+    return regions
+
+

@@ -1,30 +1,13 @@
-import pandas as pd
-from services.fetcher import fetch_all_orders
-from services.converters import json_to_df, df_to_buy, df_to_sell
-from services.storage import save_csv
-from services.filters import iqr_filter
-import config
-from requests import Session
+from controllers.route_manager import analyze_route, get_item_prices
 
-def fetch_all_regions(region_id: list[int]) -> None:
-    orders = []
-    session = Session()
-    for region in region_id:
-        orders.extend(fetch_all_orders(region, session))
+def main():
     
-    df = json_to_df(orders)
+    start_system = 30000142
+    end_system = 30002187
+    jump_radius = 2
+    grouped_orders = analyze_route(start_system=start_system, end_system=end_system, jump_radius=jump_radius)
+    #get_item_prices(grouped_orders)
+    print(type(grouped_orders))
+    get_item_prices(grouped_orders)
 
-    buy_orders = df_to_buy(df)
-    sell_orders = df_to_sell(df)
-
-    save_csv(buy_orders, "buy_orders")
-    save_csv(sell_orders, "sell_orders")
-    
-    clean_buy_orders = buy_orders.groupby('type_id', group_keys=False).apply(iqr_filter, 'price')
-    clean_sell_orders = sell_orders.groupby('type_id', group_keys=False).apply(iqr_filter, 'price')
-    
-    save_csv(clean_buy_orders, "clean_buy_orders")
-    save_csv(clean_sell_orders, "clean_sell_orders")
-
-if __name__ == "__main__":
-    fetch_all_regions(config.regions)
+main()

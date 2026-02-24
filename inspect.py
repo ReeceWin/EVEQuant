@@ -1,7 +1,10 @@
 import sqlite3
+from config import DB_PATH
+
+
 
 def inspect_table(table_name):
-    with sqlite3.connect("eve.db") as conn:
+    with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         
         # 1. Get the data (LIMIT 5 is like .head())
@@ -19,7 +22,7 @@ def inspect_table(table_name):
             print(row)
 
 def list_tables():
-    with sqlite3.connect("eve.db") as conn:
+    with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
         tables = cursor.fetchall()
