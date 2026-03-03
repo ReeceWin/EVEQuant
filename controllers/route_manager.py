@@ -9,7 +9,7 @@ def group_orders_by_item(orders):
         type_id = order['type_id']
         if type_id not in market_data:
             market_data[type_id] = []
-        market_data[type_id].append([order['volume_remain'],order['system_id'],order['price']])
+        market_data[type_id].append([order['volume_remain'],order['system_id'],order['location_id'],order['price']])
     return market_data
 
 def analyze_route(start_system, end_system, jump_radius):

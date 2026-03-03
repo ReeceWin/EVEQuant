@@ -75,6 +75,4 @@ def main():
         systems = get_systems_in_range(system, 2)
         bubble.update(systems)
         print("Bubble: ", bubble)
-
-main()
         

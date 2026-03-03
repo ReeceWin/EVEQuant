@@ -23,6 +23,14 @@ def get_item_names(item_ids: list[int]) -> dict[int, str]:
         cursor.execute(query, item_ids)
         return dict(cursor.fetchall())
 
+def get_item_volume(item_id: int) -> float:
+    """Fetches a single item volume safely."""
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT COALESCE(volume, 0) FROM invTypes WHERE typeID = ?", (item_id,))
+        result = cursor.fetchone()
+        return result[0] if result else 0.0
+
 def get_all_jumps() -> list[tuple[int, int]]:
     """
     Fetches every stargate connection in the universe.
