@@ -57,15 +57,11 @@ def get_regions_for_system(system_ids: list[int]) -> set[int]:
         cursor = conn.cursor()
         placeholders = ",".join(["?"] * len(system_ids))
         query = f"SELECT regionID FROM mapSolarSystems WHERE solarSystemID IN ({placeholders})"
-        print(query)
         cursor.execute(query, system_ids)
         result = cursor.fetchall()
-        print(result)
         regions = set()
         for row in result:
             regions.add(row[0])
-
-        print("===============SQLITE3 REGIONS: ", regions, "===============")
     return regions
 
 def get_location_name(location_id: int) -> str:
