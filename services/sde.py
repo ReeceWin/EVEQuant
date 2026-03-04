@@ -50,19 +50,31 @@ def get_region_for_system(system_id: int) -> str:
 
 def get_regions_for_system(system_ids: list[int]) -> set[int]:
     if not system_ids:
+        print("Regions for system is none.")
         return set()
-
+    print("regions is not none")
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         placeholders = ",".join(["?"] * len(system_ids))
         query = f"SELECT regionID FROM mapSolarSystems WHERE solarSystemID IN ({placeholders})"
-
+        print(query)
         cursor.execute(query, system_ids)
         result = cursor.fetchall()
+        print(result)
         regions = set()
         for row in result:
             regions.add(row[0])
-    
+
+        print("===============SQLITE3 REGIONS: ", regions, "===============")
     return regions
+
+def get_location_name(location_id: int) -> str:
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT stationName FROM staStations WHERE stationID = ?", (location_id,))
+        result = cursor.fetchone()
+        return result[0] if result else f"Unknown locationID:({location_id})"
+
+    
 
 

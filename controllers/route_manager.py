@@ -12,7 +12,7 @@ def group_orders_by_item(orders):
         market_data[type_id].append([order['volume_remain'],order['system_id'],order['location_id'],order['price']])
     return market_data
 
-def analyze_route(start_system, end_system, jump_radius):
+def analyze_route(start_system, end_system, jump_radius, order_type):
     route = find_route(start_system, end_system)
     bubble = set()
     for system in route:
@@ -20,12 +20,13 @@ def analyze_route(start_system, end_system, jump_radius):
         bubble.update(systems)
         print(bubble)
     bubble_list = list(bubble)
+    print("Bubble:  ", bubble_list)
     regions = get_regions_for_system(bubble_list)
-    print(regions)
+    print("Regions: ", regions)
 
     all_orders = []
     for region in regions:
-        orders = fetch_all_orders(region, "sell")
+        orders = fetch_all_orders(region, order_type)
         all_orders.extend(orders)
     
     grouped_orders = group_orders_by_item(all_orders)
