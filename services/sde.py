@@ -42,6 +42,9 @@ def get_all_jumps() -> list[tuple[int, int]]:
         return cursor.fetchall()
 
 def get_region_for_system(system_id: int) -> str:
+    """
+    Gets the region_id for the system_id given
+    """
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT regionID FROM mapSolarSystems WHERE solarSystemID = ?", (system_id,))
@@ -49,6 +52,9 @@ def get_region_for_system(system_id: int) -> str:
         return result[0] if result else f"Unknown solarSystemId:({system_id})"
 
 def get_regions_for_system(system_ids: list[int]) -> set[int]:
+    """
+    Returns all regions for a list of system_ids
+    """
     if not system_ids:
         print("Regions for system is none.")
         return set()
@@ -65,6 +71,9 @@ def get_regions_for_system(system_ids: list[int]) -> set[int]:
     return regions
 
 def get_location_name(location_id: int) -> str:
+    """
+    Returns the name of the location from the location_id
+    """
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT stationName FROM staStations WHERE stationID = ?", (location_id,))

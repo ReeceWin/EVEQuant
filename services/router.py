@@ -1,7 +1,10 @@
 from .sde import get_all_jumps
 from collections import deque
 
-def build_graph():
+def build_graph(): 
+    """
+    Builds the graph of all the jumps
+    """
     jumps = get_all_jumps()
     graph = {}
     for jump in jumps:
@@ -20,9 +23,15 @@ def build_graph():
 JUMP_GRAPH = build_graph() # Use capitals for global variables
 
 def get_neighbours(system_id: int) -> list[int]:
+    """
+    Returns the neighbours of the system_id
+    """
     return JUMP_GRAPH.get(system_id, [])
 
 def find_route(start_system, end_system):
+    """
+    Finds the route between two systems using BFS
+    """
     # Create a queue using deque as it is more optimised for first in first out algorithms like BFS
     queue = deque([[start_system]])
     # Initialize visited with the starting system
@@ -49,6 +58,9 @@ def find_route(start_system, end_system):
                 queue.append(new_path)
 
 def get_systems_in_range(start_system, max_jumps):
+    """
+    Gets all systems within a certain range of the start system
+    """
     queue = deque([[start_system]])
     visited = {start_system}
     while queue:
@@ -69,6 +81,9 @@ def get_systems_in_range(start_system, max_jumps):
     return list(visited)
 
 def main():
+    """
+    Main function to test the router
+    """
     route = find_route(30000142, 30002187)
     bubble = set()
     for system in route:

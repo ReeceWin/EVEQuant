@@ -28,12 +28,13 @@ def analyze_route(start_system, end_system, jump_radius, order_type):
     for region in regions:
         orders = fetch_all_orders(region, order_type)
         all_orders.extend(orders)
+        print(len(all_orders))
     
     grouped_orders = group_orders_by_item(all_orders)
 
     grouped_orders_length = len(grouped_orders)
     print("Number of unique items: ", grouped_orders_length)
-    return grouped_orders
+    return grouped_orders, bubble_list
 
 def get_item_prices(grouped_orders):
     best_prices = {}
